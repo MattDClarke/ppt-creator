@@ -1,0 +1,21 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling, testing your project before committing'
+
+# Check Prettier standards
+yarn run lint ||
+(
+    echo 'ESLint and Prettier Check Failed. Run yarn run eslint . --fix, add changes and try commit again.';
+    false;
+)
+
+# Check tsconfig standards
+yarn run type-check ||
+(
+    echo 'TypeScript type issues. Make the changes required above.'
+    false;
+)
+
+# If everything passes... Now we can commit
+echo '✅ All pre-commit checks passed.'

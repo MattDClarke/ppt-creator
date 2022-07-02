@@ -15,6 +15,7 @@ type Props = {
   confirmBgColor?: string;
   confirmClick?: () => void;
   confirmDisabled?: boolean;
+  cancelDisabled?: boolean;
   hideActions?: boolean;
 };
 
@@ -31,6 +32,7 @@ export default function Actions({
   confirmBgColor = '#2185d0',
   confirmClick,
   confirmDisabled = false,
+  cancelDisabled = false,
   hideActions = false,
 }: Props) {
   const cx = classNames('modal_actions', { [className]: className });
@@ -49,6 +51,7 @@ export default function Actions({
               bgColor={cancelBgColor}
               onClick={cancelClick}
               style={{ marginRight: confirmClick ? '0.5rem' : '0' }}
+              disabled={cancelDisabled}
             />
           )}
 

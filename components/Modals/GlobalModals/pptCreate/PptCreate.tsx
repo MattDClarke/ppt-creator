@@ -47,7 +47,9 @@ export default function PptCreate({
         style={{ content: { width: 767 } }}
       >
         <Modal.Header closeModal={closeModal}>
-          Select images for each word
+          {state.step < numWords && 'Select images for each word'}
+          {state.step === numWords && 'Select ppt options'}
+          {state.step === numWords + 1 && 'ppt creation complete'}
         </Modal.Header>
         <div>
           <Modal.Content>
@@ -78,9 +80,11 @@ export default function PptCreate({
           cancelText="Previous"
           cancelClick={() => dispatch({ type: 'Step_Decrease' })}
           cancelDisabled={state.step === 0}
-          confirmText="Next"
+          confirmText={state.step === numWords ? 'Create ppt' : 'Next'}
+          // TODO confirm click when state.step === numWords -> action -> create ppt
           confirmClick={() => dispatch({ type: 'Step_Increase' })}
           confirmDisabled={state.step >= numWords + 1}
+          hideActions={state.step >= numWords + 1}
         ></Modal.Actions>
       </Modal>
       <style jsx>{`

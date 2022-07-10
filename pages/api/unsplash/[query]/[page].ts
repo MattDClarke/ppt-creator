@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from 'appConstants'; // constants is used already
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createApi } from 'unsplash-js';
 
@@ -6,7 +7,7 @@ export default async function getPhotos(
   res: NextApiResponse
 ) {
   if (req.method === 'GET') {
-    const perPage = 10;
+    const perPage = PAGE_SIZE;
     const query = req.query.query as string;
     const page = parseInt(req.query.page as string, 10) as number;
 
@@ -29,7 +30,7 @@ export default async function getPhotos(
           // extract total and results array from response
           const total = feed.total;
           const results = feed.results;
-          res.json({ total, results, message: 'success' });
+          res.json({ total, results });
         }
       })
       // if internet connection issue

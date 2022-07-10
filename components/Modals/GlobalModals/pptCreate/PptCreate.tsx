@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction, useReducer } from 'react';
 import Modal from 'components/Modals/Modal';
 import { Word } from 'types';
 import type { State, Action } from './PptCreate.types';
+import PptCreateImgSearch from './PptCreateImgSearch';
 
 const initialState: State = {
   step: 0,
@@ -52,14 +53,14 @@ export default function PptCreate({
           {state.step === numWords + 1 && 'ppt creation complete'}
         </Modal.Header>
         <div>
-          <Modal.Content>
+          <Modal.Content style={{ overflowY: 'auto', maxHeight: '70vh' }}>
             {words.map((word, i) => (
               <div
                 key={word.id}
                 className={i !== state.step ? 'hide' : ''}
                 aria-hidden={i !== state.step ? 'true' : 'false'}
               >
-                {word.word} {state.step}
+                <PptCreateImgSearch word={word.word} step={state.step} />
               </div>
             ))}
             <div

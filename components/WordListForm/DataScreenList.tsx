@@ -27,7 +27,6 @@ const DataScreenList = forwardRef(
     ref: ForwardedRef<HTMLDivElement>
   ) => {
     const disabled = showPlaceholders || disableHover;
-    console.log({ list }, list.length, showPlaceholders);
     return (
       <div className="list" ref={ref}>
         {(list.length || !showPlaceholders

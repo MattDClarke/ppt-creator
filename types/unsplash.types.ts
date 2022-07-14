@@ -1,5 +1,5 @@
 // from - https://stackblitz.com/edit/unsplash-js-typescript?file=index.tsx
-// not types not complete - just properties that I will use
+// types not complete - just properties that I will use
 
 export type Photo = {
   id: number;

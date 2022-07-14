@@ -7,6 +7,7 @@ import useWords from 'hooks/useWords';
 
 export default function PptCreatorPage() {
   const [word, setWord] = useState('');
+  const [title, setTitle] = useState('');
   const [words, dispatch] = useWords([]);
   const [pptCreateModalIsOpen, setPptCreateModalIsOpen] = useState(false);
 
@@ -16,6 +17,31 @@ export default function PptCreatorPage() {
   return (
     <div className="container">
       <h1>ppt Creator</h1>
+      <input
+        placeholder="Word list title here..."
+        required
+        type="text"
+        value={title}
+        onChange={e => setTitle(e.target.value)}
+      />
+      <style jsx>{`
+        input {
+          margin: 0.5rem;
+          padding: 0.5rem 0.2rem;
+          text-align: center;
+          color: #414141;
+          font-size: 1.5rem;
+          font-weight: normal;
+          display: block;
+          width: 300px;
+          border: 1px solid transparent;
+          border-radius: 0.5rem;
+        }
+
+        input:hover {
+          border: 1px solid #489dca;
+        }
+      `}</style>
       <InlineForm
         placeholder="Vocabulary here..."
         value={word}
@@ -50,11 +76,12 @@ export default function PptCreatorPage() {
         onClick={() => {
           setPptCreateModalIsOpen(true);
         }}
-        disabled={words.length < 3}
+        disabled={words.length < 3 || title.length < 3}
       />
 
       {pptCreateModalIsOpen && (
         <PptCreate
+          title={title}
           words={words}
           pptCreateModalIsOpen={pptCreateModalIsOpen}
           setPptCreateModalIsOpen={setPptCreateModalIsOpen}

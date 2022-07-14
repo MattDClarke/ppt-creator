@@ -3,6 +3,7 @@ import Modal from 'components/Modals/Modal';
 import { Word } from 'types';
 import type { State, Action } from './PptCreate.types';
 import PptCreateImgSearch from './PptCreateImgSearch';
+import LoadingBar from './LoadingBar';
 
 const initialState: State = {
   step: 0,
@@ -18,12 +19,14 @@ const reducer = (state: State, action: Action): State => {
 };
 
 type Props = {
+  title: string;
   words: Word[];
   pptCreateModalIsOpen: boolean;
   setPptCreateModalIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export default function PptCreate({
+  title,
   words,
   pptCreateModalIsOpen,
   setPptCreateModalIsOpen,
@@ -47,20 +50,33 @@ export default function PptCreate({
         closeModal={closeModal}
         style={{ content: { width: 767 } }}
       >
-        <Modal.Header closeModal={closeModal}>
-          {state.step < numWords && 'Select images for each word'}
+        <Modal.Header closeModal={closeModal} style={{ margin: '0 auto' }}>
+          <LoadingBar numWords={numWords} step={state.step} />
+          {state.step < numWords &&
+            'Choose an image for each word - Click an image to select it'}
           {state.step === numWords && 'Select ppt options'}
           {state.step === numWords + 1 && 'ppt creation complete'}
         </Modal.Header>
         <div>
-          <Modal.Content style={{ overflowY: 'auto', maxHeight: '70vh' }}>
+          <Modal.Content
+            style={{
+              overflowY: 'auto',
+              maxHeight: '70vh',
+              textAlign: 'center',
+            }}
+          >
             {words.map((word, i) => (
               <div
                 key={word.id}
                 className={i !== state.step ? 'hide' : ''}
                 aria-hidden={i !== state.step ? 'true' : 'false'}
               >
-                <PptCreateImgSearch word={word.word} step={state.step} />
+                <div style={{ padding: '1.5rem 0.5rem' }}>
+                  {`Word ${state.step + 1} of ${numWords}: "${
+                    word.word
+                  }" for list "${title}"`}
+                </div>
+                <PptCreateImgSearch word={word.word} />
               </div>
             ))}
             <div

@@ -2,7 +2,7 @@ import React, { Dispatch, SetStateAction, useReducer } from 'react';
 import Modal from 'components/Modals/Modal';
 import { Word } from 'types';
 import type { State, Action } from './PptCreate.types';
-import PptCreateImgSearch from './PptCreateImgSearch';
+import PptCreateImgSearch from './ImgSearch';
 import LoadingBar from './LoadingBar';
 
 const initialState: State = {

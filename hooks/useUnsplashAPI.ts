@@ -13,6 +13,8 @@ function useUnsplashAPI(query: string) {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateFirstPage: false,
+      shouldRetryOnError: false,
+      errorRetryCount: 0,
     }
   );
   return { data, error, size, setSize };

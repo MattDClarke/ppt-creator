@@ -4,6 +4,7 @@ import { useUnsplashAPI } from 'hooks/useUnsplashAPI';
 import * as Styles from './ImgSearch.styles';
 import { useCallback, useRef } from 'react';
 import { useMountedState } from 'hooks/useMountedState';
+import Loader from './Loader';
 
 type Props = {
   word: string;
@@ -58,9 +59,11 @@ export default function PptCreateImgSearch({ word }: Props) {
 
   return (
     <div>
-      {isEmpty && !isLoadingInitialData && !isLoadingMore && (
-        <p>No photos found</p>
-      )}
+      {isEmpty &&
+        !isLoadingInitialData &&
+        pageEndReached &&
+        totalPhotos === 0 &&
+        data && <p>No photos found</p>}
       {!isEmpty && (
         <p>
           Images from{' '}
@@ -118,6 +121,9 @@ export default function PptCreateImgSearch({ word }: Props) {
         {Styles.ImgsCardImgContainerCSS.styles}
         {Styles.ImgsCardCaptionCSS.styles}
       </div>
+      {isEmpty && !data && (
+        <Loader circleDiameter={20} colorDark="#64c9ff" colorLight="#cdeeff" />
+      )}
     </div>
   );
 }

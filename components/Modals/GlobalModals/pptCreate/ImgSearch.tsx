@@ -5,12 +5,21 @@ import * as Styles from './ImgSearch.styles';
 import { useCallback, useRef } from 'react';
 import { useMountedState } from 'hooks/useMountedState';
 import Loader from './Loader';
+import { Dispatch, State } from './PptCreate.types';
 
 type Props = {
   word: string;
+  index: number;
+  state: State;
+  dispatch: Dispatch;
 };
 
-export default function PptCreateImgSearch({ word }: Props) {
+export default function PptCreateImgSearch({
+  word,
+  index,
+  state,
+  dispatch,
+}: Props) {
   const { data, error, size, setSize } = useUnsplashAPI(word);
   const photos = data ? [...data.map(obj => obj?.results)].flat() : [];
   const totalPhotos = data ? data[0].total : 0;
@@ -57,6 +66,34 @@ export default function PptCreateImgSearch({ word }: Props) {
     ]
   );
 
+  function handleImgSelect(e: React.MouseEvent<HTMLDivElement>) {
+    const img = e.currentTarget.getAttribute(
+      'data-image-src-regular'
+    ) as string;
+    const originalImgWidth = parseInt(
+      e.currentTarget.getAttribute('data-original-width') as string
+    );
+    const originalImgHeight = parseInt(
+      e.currentTarget.getAttribute('data-original-height') as string
+    );
+    const triggerDownloadAPI = e.currentTarget.getAttribute(
+      'data-trigger-download-api'
+    ) as string;
+    dispatch({
+      type: 'Add_Img_Unsplash',
+      step: index,
+      img,
+      originalImgHeight,
+      originalImgWidth,
+      triggerDownloadAPI,
+    });
+  }
+
+  // for adding style to selected image
+  function urlInStateCheck(url: string) {
+    return state.selectedImgs[index].img === url;
+  }
+
   return (
     <div>
       {isEmpty &&
@@ -79,11 +116,26 @@ export default function PptCreateImgSearch({ word }: Props) {
       )}
       <div className={Styles.ImgsContainerCSS.className}>
         {photos.map((photo, i) => (
-          <div key={photo?.id} className={Styles.ImgsCardCSS.className}>
+          <div
+            key={photo?.id}
+            className={Styles.ImgsCardCSS.className}
+            tabIndex={0}
+            onClick={handleImgSelect}
+            // onKeyDown={handleImgSelectKeyDown}
+            data-image-src-regular={photo?.urls?.regular}
+            data-original-width={photo?.width}
+            data-original-height={photo?.height}
+            data-trigger-download-api={photo?.links?.download_location}
+          >
             {/* if it is the last pic, lastPicElementRef will be called with this div as a reference */}
             {photos.length === i + 1 ? (
               <div
                 className={Styles.ImgsCardImgContainerCSS.className}
+                style={{
+                  outline: urlInStateCheck(photo?.urls?.regular)
+                    ? '3px solid black'
+                    : 'none',
+                }}
                 ref={lastPicElementRef}
               >
                 <Image
@@ -91,15 +143,32 @@ export default function PptCreateImgSearch({ word }: Props) {
                   alt={photo?.alt_description}
                   layout="fill"
                   objectFit="contain"
+                  style={{
+                    filter: urlInStateCheck(photo?.urls?.regular)
+                      ? 'sepia(0.5)'
+                      : 'none',
+                  }}
                 />
               </div>
             ) : (
-              <div className={Styles.ImgsCardImgContainerCSS.className}>
+              <div
+                className={Styles.ImgsCardImgContainerCSS.className}
+                style={{
+                  outline: urlInStateCheck(photo?.urls?.regular)
+                    ? '3px solid black'
+                    : 'none',
+                }}
+              >
                 <Image
                   src={photo?.urls?.thumb}
                   alt={photo?.alt_description}
                   layout="fill"
                   objectFit="contain"
+                  style={{
+                    filter: urlInStateCheck(photo?.urls?.regular)
+                      ? 'sepia(0.5)'
+                      : 'none',
+                  }}
                 />
               </div>
             )}

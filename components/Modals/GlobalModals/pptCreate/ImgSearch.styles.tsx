@@ -5,6 +5,7 @@ export const ImgsContainerCSS = css.resolve`
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    cursor: pointer;
   }
 `;
 
@@ -30,25 +31,18 @@ export const ImgsCardImgContainerCSS = css.resolve`
     width: 200px;
     border: #909090 solid 1px;
   }
-
-  div span {
-    position: unset !important;
-    height: 100px;
-  }
 `;
 
 export const ImgsCardCaptionCSS = css.resolve`
   div {
     padding: 0.25rem;
     border-radius: 0 0 5px 5px;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.7rem;
-    background-color: #ebebef;
+    background-color: #fafafc;
     outline: #909090 solid 1px;
-  }
-
-  div a {
-    white-space: nowrap;
+    width: 200px;
   }
 `;

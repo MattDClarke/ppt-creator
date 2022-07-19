@@ -5,16 +5,30 @@ import type { State, Action } from './PptCreate.types';
 import PptCreateImgSearch from './ImgSearch';
 import LoadingBar from './LoadingBar';
 
-const initialState: State = {
-  step: 0,
-};
-
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'Step_Increase':
       return { ...state, step: state.step + 1 };
     case 'Step_Decrease':
       return { ...state, step: state.step - 1 };
+    case 'Add_Img_Unsplash':
+      const { selectedImgs } = state;
+      const newSelectedImgs = selectedImgs.map(selectedImgObj =>
+        selectedImgObj.step === action.step
+          ? {
+              ...selectedImgObj,
+              img: action.img,
+              originalImgWidth: action.originalImgWidth,
+              originalImgHeight: action.originalImgHeight,
+              triggerDownloadAPI: action.triggerDownloadAPI,
+            }
+          : selectedImgObj
+      );
+
+      return { ...state, selectedImgs: newSelectedImgs };
+
+    default:
+      throw new Error();
   }
 };
 
@@ -33,9 +47,23 @@ export default function PptCreate({
 }: Props) {
   const closeModal = () => setPptCreateModalIsOpen(false);
 
+  const getInitialState = (): State => {
+    const selectedImgsObjArr = words.map((word, i) => ({
+      step: i,
+      word: word.word,
+      img: null,
+      translation: null,
+      originalImgWidth: null,
+      originalImgHeight: null,
+      triggerDownloadAPI: null,
+    }));
+    return {
+      step: 0,
+      selectedImgs: selectedImgsObjArr,
+    };
+  };
   // REDUCER THAT HOLDS THE LOGIC AND INFO FOR THE WHOLE FLOW
-  const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [state, dispatch] = useReducer(reducer, getInitialState());
   const numWords = words.length;
   const totalSteps = numWords + 1;
 
@@ -62,7 +90,7 @@ export default function PptCreate({
           <Modal.Header closeModal={closeModal} style={{ margin: '0 auto' }}>
             <LoadingBar numWords={numWords} step={state.step} />
             {state.step < numWords &&
-              `Choose an image for each word ${word?.word} - Click an image to select it`}
+              `Choose an image for each word - Click an image to select it`}
           </Modal.Header>
           <div>
             <Modal.Content
@@ -78,7 +106,12 @@ export default function PptCreate({
                     word?.word
                   }" for list "${title}"`}
                 </div>
-                <PptCreateImgSearch word={word?.word} />
+                <PptCreateImgSearch
+                  word={word?.word}
+                  index={i}
+                  state={state}
+                  dispatch={dispatch}
+                />
               </>
             </Modal.Content>
           </div>

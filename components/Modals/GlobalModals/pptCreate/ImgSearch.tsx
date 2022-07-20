@@ -66,17 +66,23 @@ export default function PptCreateImgSearch({
     ]
   );
 
-  function handleImgSelect(e: React.MouseEvent<HTMLDivElement>) {
-    const img = e.currentTarget.getAttribute(
-      'data-image-src-regular'
-    ) as string;
+  function handleImgClick(e: React.MouseEvent<HTMLDivElement>) {
+    handleImgSelect(e.currentTarget);
+  }
+
+  function handleImgKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
+    if (e.code === 'Enter') handleImgSelect(e.currentTarget);
+  }
+
+  function handleImgSelect(currTarget: HTMLDivElement) {
+    const img = currTarget.getAttribute('data-image-src-regular') as string;
     const originalImgWidth = parseInt(
-      e.currentTarget.getAttribute('data-original-width') as string
+      currTarget.getAttribute('data-original-width') as string
     );
     const originalImgHeight = parseInt(
-      e.currentTarget.getAttribute('data-original-height') as string
+      currTarget.getAttribute('data-original-height') as string
     );
-    const triggerDownloadAPI = e.currentTarget.getAttribute(
+    const triggerDownloadAPI = currTarget.getAttribute(
       'data-trigger-download-api'
     ) as string;
     dispatch({
@@ -120,8 +126,8 @@ export default function PptCreateImgSearch({
             key={photo?.id}
             className={Styles.ImgsCardCSS.className}
             tabIndex={0}
-            onClick={handleImgSelect}
-            // onKeyDown={handleImgSelectKeyDown}
+            onClick={handleImgClick}
+            onKeyDown={handleImgKeyDown}
             data-image-src-regular={photo?.urls?.regular}
             data-original-width={photo?.width}
             data-original-height={photo?.height}

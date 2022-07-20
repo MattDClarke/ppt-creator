@@ -9,6 +9,7 @@ export type selectedImg = {
 };
 
 export type State = {
+  title: string;
   step: number;
   selectedImgs: selectedImg[];
 };

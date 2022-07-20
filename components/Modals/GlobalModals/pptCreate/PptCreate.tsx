@@ -59,6 +59,7 @@ export default function PptCreate({
     }));
     return {
       step: 0,
+      title: title,
       selectedImgs: selectedImgsObjArr,
     };
   };
@@ -104,7 +105,7 @@ export default function PptCreate({
                 <div style={{ padding: '1.5rem 0.5rem' }}>
                   {`Word ${state.step + 1} of ${numWords}: "${
                     word?.word
-                  }" for list "${title}"`}
+                  }" for list "${state.title}"`}
                 </div>
                 <PptCreateImgSearch
                   word={word?.word}

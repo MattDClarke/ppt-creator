@@ -1,9 +1,12 @@
 import React, { Dispatch, SetStateAction, useReducer } from 'react';
+import { ColorPicker, useColor } from 'react-color-palette';
+import 'react-color-palette/lib/css/styles.css';
 import Modal from 'components/Modals/Modal';
 import { Word } from 'types';
 import type { State, Action } from './PptCreate.types';
 import PptCreateImgSearch from './ImgSearch';
 import LoadingBar from './LoadingBar';
+import { fontFaceOptions } from './pptOptions';
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -67,6 +70,10 @@ export default function PptCreate({
   const [state, dispatch] = useReducer(reducer, getInitialState());
   const numWords = words.length;
   const totalSteps = numWords + 1;
+
+  // for ppt options form
+  const [color, setColor] = useColor('hex', '#000000');
+  const [backgroundColor, setBackgroundColor] = useColor('hex', '#FFFFFF');
 
   // STEP CHECKER
   if (state.step < 0 || state.step > totalSteps) {
@@ -147,17 +154,91 @@ export default function PptCreate({
         >
           <Modal.Header closeModal={closeModal} style={{ margin: '0 auto' }}>
             <LoadingBar numWords={numWords} step={state.step} />
-            Select ppt options
+            Select PowerPoint options
           </Modal.Header>
           <div>
             <Modal.Content
               style={{
                 overflowY: 'auto',
                 maxHeight: '70vh',
-                textAlign: 'center',
               }}
             >
-              <div>ppt Options form</div>
+              <div style={{ width: '250px', margin: '0 auto' }}>
+                <fieldset style={{ border: 0 }}>
+                  <div className="form-element-container">
+                    <label htmlFor="ppt-font" style={{ display: 'block' }}>
+                      Font
+                    </label>
+                    <select id="ppt-font" name="ppt-font">
+                      {fontFaceOptions.map(font => (
+                        <option
+                          key={font}
+                          value={font}
+                          style={{ fontFamily: font }}
+                        >
+                          {font}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <label className="checkbox">
+                    <input type="checkbox" id="ppt-bold" name="ppt-bold" />
+                    <span>Bold</span>
+                  </label>
+                  <label className="checkbox">
+                    <input type="checkbox" id="ppt-italic" name="ppt-italic" />
+                    Italic
+                  </label>
+
+                  <div className="form-element-container">
+                    <label>Font color</label>
+                    <ColorPicker
+                      width={250}
+                      height={150}
+                      color={color}
+                      onChange={setColor}
+                      hideHSV
+                      hideRGB
+                      dark={false}
+                    />
+                  </div>
+                </fieldset>
+                <div>
+                  <div className="form-element-container">
+                    <label>Background color</label>
+                    <ColorPicker
+                      width={250}
+                      height={150}
+                      color={backgroundColor}
+                      onChange={setBackgroundColor}
+                      hideHSV
+                      hideRGB
+                      dark={false}
+                    />
+                  </div>
+                </div>
+                {/* TODO: add translation */}
+                <style jsx>{`
+                  select {
+                    font-size: 1rem;
+                    padding: 0.2rem 0.2rem;
+                    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.05);
+                  }
+                  label {
+                    display: block;
+                    padding-bottom: 0.5rem;
+                    font-weight: bold;
+                  }
+                  .form-element-container {
+                    padding: 0.5rem;
+                  }
+                  .checkbox {
+                    padding: 0.5rem;
+                    display: flex;
+                    align-items: baseline;
+                  }
+                `}</style>
+              </div>
             </Modal.Content>
           </div>
           <Modal.Actions

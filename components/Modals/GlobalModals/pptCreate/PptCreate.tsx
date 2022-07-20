@@ -122,7 +122,9 @@ export default function PptCreate({
             cancelDisabled={state.step === 0}
             confirmText={state.step === numWords ? 'Create ppt' : 'Next'}
             confirmClick={() => dispatch({ type: 'Step_Increase' })}
-            confirmDisabled={state.step >= numWords + 1}
+            confirmDisabled={
+              state.step >= numWords + 1 || state.selectedImgs[i].img === null
+            }
             hideActions={state.step >= numWords + 1}
           ></Modal.Actions>
         </Modal>

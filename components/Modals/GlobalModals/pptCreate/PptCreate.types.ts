@@ -1,3 +1,5 @@
+import { Color } from 'react-color-palette';
+
 export type selectedImg = {
   step: number;
   word: string;
@@ -8,15 +10,32 @@ export type selectedImg = {
   triggerDownloadAPI: string | null;
 };
 
+export type pptOptions = {
+  fontFace: string;
+  bold: boolean;
+  italic: boolean;
+  color: Color;
+  backgroundColor: Color;
+};
+
 export type State = {
   title: string;
   step: number;
   selectedImgs: selectedImg[];
+  pptOptions: pptOptions;
 };
 
 export type Action =
   | { type: 'Step_Increase' }
   | { type: 'Step_Decrease' }
+  | {
+      type: 'Add_Ppt_Options';
+      fontFace: string;
+      bold: boolean;
+      italic: boolean;
+      color: Color;
+      backgroundColor: Color;
+    }
   | {
       type: 'Add_Img_Unsplash';
       step: number;

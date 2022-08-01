@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useReducer } from 'react';
+import React, { Dispatch, SetStateAction, useReducer, useState } from 'react';
 import { ColorPicker, useColor } from 'react-color-palette';
 import 'react-color-palette/lib/css/styles.css';
 import Modal from 'components/Modals/Modal';
@@ -29,7 +29,17 @@ const reducer = (state: State, action: Action): State => {
       );
 
       return { ...state, selectedImgs: newSelectedImgs };
-
+    case 'Add_Ppt_Options':
+      return {
+        ...state,
+        pptOptions: {
+          fontFace: action.fontFace,
+          bold: action.bold,
+          italic: action.italic,
+          color: action.color,
+          backgroundColor: action.backgroundColor,
+        },
+      };
     default:
       throw new Error();
   }
@@ -64,6 +74,37 @@ export default function PptCreate({
       step: 0,
       title: title,
       selectedImgs: selectedImgsObjArr,
+      pptOptions: {
+        fontFace: '',
+        bold: false,
+        italic: false,
+        color: {
+          hex: '#000000',
+          rgb: {
+            r: 0,
+            g: 0,
+            b: 0,
+          },
+          hsv: {
+            h: 0,
+            s: 0,
+            v: 0,
+          },
+        },
+        backgroundColor: {
+          hex: '#f8f3f3',
+          rgb: {
+            r: 248,
+            g: 243,
+            b: 243,
+          },
+          hsv: {
+            h: 0,
+            s: 2.133331298828125,
+            v: 97.36111132303874,
+          },
+        },
+      },
     };
   };
   // REDUCER THAT HOLDS THE LOGIC AND INFO FOR THE WHOLE FLOW
@@ -72,12 +113,27 @@ export default function PptCreate({
   const totalSteps = numWords + 1;
 
   // for ppt options form
+  const [fontFace, setFontFace] = useState('Arial');
+  const [bold, setBold] = useState(false);
+  const [italic, setItalic] = useState(false);
   const [color, setColor] = useColor('hex', '#000000');
   const [backgroundColor, setBackgroundColor] = useColor('hex', '#FFFFFF');
 
   // STEP CHECKER
   if (state.step < 0 || state.step > totalSteps) {
     throw 'Step Threshold Exceeded';
+  }
+
+  function handlePptCreate() {
+    dispatch({
+      type: 'Add_Ppt_Options',
+      fontFace,
+      bold,
+      italic,
+      color,
+      backgroundColor,
+    });
+    dispatch({ type: 'Step_Increase' });
   }
 
   return (
@@ -152,7 +208,12 @@ export default function PptCreate({
           }}
           aria-hidden={state.step !== numWords ? 'true' : 'false'}
         >
-          <Modal.Header closeModal={closeModal} style={{ margin: '0 auto' }}>
+          <Modal.Header
+            closeModal={closeModal}
+            style={{
+              margin: '0 auto',
+            }}
+          >
             <LoadingBar numWords={numWords} step={state.step} />
             Select PowerPoint options
           </Modal.Header>
@@ -163,13 +224,23 @@ export default function PptCreate({
                 maxHeight: '70vh',
               }}
             >
-              <div style={{ width: '250px', margin: '0 auto' }}>
-                <fieldset style={{ border: 0 }}>
+              <div
+                style={{
+                  width: '300px',
+                  margin: '0 auto',
+                }}
+              >
+                <fieldset style={{ border: 0, padding: 0 }}>
                   <div className="form-element-container">
                     <label htmlFor="ppt-font" style={{ display: 'block' }}>
                       Font
                     </label>
-                    <select id="ppt-font" name="ppt-font">
+                    <select
+                      id="ppt-font"
+                      name="ppt-font"
+                      value={fontFace}
+                      onChange={e => setFontFace(e.target.value)}
+                    >
                       {fontFaceOptions.map(font => (
                         <option
                           key={font}
@@ -182,11 +253,23 @@ export default function PptCreate({
                     </select>
                   </div>
                   <label className="checkbox">
-                    <input type="checkbox" id="ppt-bold" name="ppt-bold" />
+                    <input
+                      type="checkbox"
+                      id="ppt-bold"
+                      name="ppt-bold"
+                      checked={bold}
+                      onChange={() => setBold(prevState => !prevState)}
+                    />
                     <span>Bold</span>
                   </label>
                   <label className="checkbox">
-                    <input type="checkbox" id="ppt-italic" name="ppt-italic" />
+                    <input
+                      type="checkbox"
+                      id="ppt-italic"
+                      name="ppt-italic"
+                      checked={italic}
+                      onChange={() => setItalic(prevState => !prevState)}
+                    />
                     Italic
                   </label>
 
@@ -246,8 +329,7 @@ export default function PptCreate({
             cancelClick={() => dispatch({ type: 'Step_Decrease' })}
             cancelDisabled={state.step === 0}
             confirmText={state.step === numWords ? 'Create ppt' : 'Next'}
-            // TODO confirm click when state.step === numWords -> action -> create ppt
-            confirmClick={() => dispatch({ type: 'Step_Increase' })}
+            confirmClick={handlePptCreate}
             confirmDisabled={state.step >= numWords + 1}
             hideActions={state.step >= numWords + 1}
           ></Modal.Actions>

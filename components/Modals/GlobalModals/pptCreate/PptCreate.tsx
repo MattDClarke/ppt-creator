@@ -8,6 +8,7 @@ import PptCreateImgSearch from './ImgSearch';
 import LoadingBar from './LoadingBar';
 import PptOptionsForm from './PptOptionsForm';
 import { imagesSrcToDataURL } from './helpers';
+import Loader from './Loader';
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -126,9 +127,28 @@ export default function PptCreate({
   const [color, setColor] = useColor('hex', '#000000');
   const [backgroundColor, setBackgroundColor] = useColor('hex', '#FFFFFF');
 
+  // for ppt creation loading state
+  const [pptLoading, setPptLoading] = useState<'loading' | 'success' | 'error'>(
+    'loading'
+  );
+
   // STEP CHECKER
   if (state.step < 0 || state.step > totalSteps) {
     throw 'Step Threshold Exceeded';
+  }
+
+  function loadingMsg() {
+    if (pptLoading === 'loading') {
+      return (
+        <Loader circleDiameter={20} colorDark="#64c9ff" colorLight="#cdeeff" />
+      );
+    }
+    if (pptLoading === 'success') {
+      return 'ppt Created! Check your downloads folder.';
+    }
+    if (pptLoading === 'error') {
+      return 'There was an error creating the ppt. Please try again.';
+    }
   }
 
   async function handlePptCreate() {
@@ -142,8 +162,17 @@ export default function PptCreate({
     });
     dispatch({ type: 'Step_Increase' });
     const { selectedImgs } = state;
-    const optimizedImgs = await imagesSrcToDataURL(selectedImgs);
-    dispatch({ type: 'Add_Optimized_Imgs', optimizedImgs });
+    let optimizedImgs;
+    try {
+      optimizedImgs = await imagesSrcToDataURL(selectedImgs);
+    } catch {
+      setPptLoading('error');
+    }
+
+    if (typeof optimizedImgs !== 'undefined') {
+      dispatch({ type: 'Add_Optimized_Imgs', optimizedImgs });
+      setPptLoading('success');
+    }
   }
 
   return (
@@ -287,7 +316,7 @@ export default function PptCreate({
                 textAlign: 'center',
               }}
             >
-              <div>complete message</div>
+              <div>{loadingMsg()}</div>
             </Modal.Content>
           </div>
           <Modal.Actions hideActions={true}></Modal.Actions>

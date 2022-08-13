@@ -53,9 +53,13 @@ export async function imagesSrcToDataURL(selectedImgs: selectedImg[]) {
         .then(dataUrl => (newUrl = dataUrl))
         .catch(error => console.error(error));
 
+      if (newUrl === undefined) {
+        throw Error('base64 conversion error');
+      }
+
       return {
         ...imgObj,
-        img: typeof newUrl === 'string' ? newUrl : null,
+        img: newUrl,
       };
     } else {
       return imgObj;

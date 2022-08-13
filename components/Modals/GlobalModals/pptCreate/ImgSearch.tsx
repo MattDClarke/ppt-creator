@@ -97,7 +97,7 @@ export default function PptCreateImgSearch({
 
   // for adding style to selected image
   function urlInStateCheck(url: string) {
-    return state.selectedImgs[index].img === url;
+    return state?.selectedImgs[index]?.img === url;
   }
 
   return (

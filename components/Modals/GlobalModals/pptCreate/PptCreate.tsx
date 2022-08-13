@@ -7,6 +7,7 @@ import type { State, Action } from './PptCreate.types';
 import PptCreateImgSearch from './ImgSearch';
 import LoadingBar from './LoadingBar';
 import PptOptionsForm from './PptOptionsForm';
+import { imagesSrcToDataURL } from './helpers';
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -40,6 +41,12 @@ const reducer = (state: State, action: Action): State => {
           backgroundColor: action.backgroundColor,
         },
       };
+    case 'Add_Optimized_Imgs':
+      return {
+        ...state,
+        selectedImgs: action.optimizedImgs,
+      };
+
     default:
       throw new Error();
   }
@@ -124,7 +131,7 @@ export default function PptCreate({
     throw 'Step Threshold Exceeded';
   }
 
-  function handlePptCreate() {
+  async function handlePptCreate() {
     dispatch({
       type: 'Add_Ppt_Options',
       fontFace,
@@ -134,6 +141,9 @@ export default function PptCreate({
       backgroundColor,
     });
     dispatch({ type: 'Step_Increase' });
+    const { selectedImgs } = state;
+    const optimizedImgs = await imagesSrcToDataURL(selectedImgs);
+    dispatch({ type: 'Add_Optimized_Imgs', optimizedImgs });
   }
 
   return (

@@ -43,6 +43,10 @@ export type Action =
       originalImgWidth: number;
       originalImgHeight: number;
       triggerDownloadAPI: string;
+    }
+  | {
+      type: 'Add_Optimized_Imgs';
+      optimizedImgs: selectedImg[];
     };
 
 export type Dispatch = React.Dispatch<Action>;

@@ -9,6 +9,7 @@ import LoadingBar from './LoadingBar';
 import PptOptionsForm from './PptOptionsForm';
 import { imagesSrcToDataURL } from '../../../../helpers/urlToBase64';
 import Loader from './Loader';
+import createPpt from 'helpers/createPpt';
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -171,7 +172,14 @@ export default function PptCreate({
 
     if (typeof optimizedImgs !== 'undefined') {
       dispatch({ type: 'Add_Optimized_Imgs', optimizedImgs });
-      setPptLoading('success');
+
+      // create ppt
+      try {
+        await createPpt({ ...state, selectedImgs: optimizedImgs });
+        setPptLoading('success');
+      } catch (error) {
+        setPptLoading('error');
+      }
     }
   }
 

@@ -7,7 +7,7 @@ import type { State, Action } from './PptCreate.types';
 import PptCreateImgSearch from './ImgSearch';
 import LoadingBar from './LoadingBar';
 import PptOptionsForm from './PptOptionsForm';
-import { imagesSrcToDataURL } from './helpers';
+import { imagesSrcToDataURL } from '../../../../helpers/urlToBase64';
 import Loader from './Loader';
 
 const reducer = (state: State, action: Action): State => {

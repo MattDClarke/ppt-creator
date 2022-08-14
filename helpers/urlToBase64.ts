@@ -1,4 +1,4 @@
-import type { selectedImg } from './PptCreate.types';
+import type { selectedImg } from '../components/Modals/GlobalModals/pptCreate/PptCreate.types';
 
 const handleErrors = (response: Response) => {
   // HTTP response status not ok - offline, network error (DNS lookup failure...)

@@ -1,5 +1,5 @@
 import { Color, ColorPicker } from 'react-color-palette';
-import { fontFaceOptions } from './pptOptions';
+import { fontFaceOptions } from '../../../../appConstants';
 
 type Props = {
   fontFace: string;

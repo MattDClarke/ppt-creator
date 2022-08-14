@@ -72,11 +72,11 @@ export default function PptCreate({
     const selectedImgsObjArr = words.map((word, i) => ({
       step: i,
       word: word.word,
-      img: null,
-      translation: null,
-      originalImgWidth: null,
-      originalImgHeight: null,
-      triggerDownloadAPI: null,
+      img: '',
+      translation: '',
+      originalImgWidth: 0,
+      originalImgHeight: 0,
+      triggerDownloadAPI: '',
     }));
     return {
       step: 0,
@@ -225,7 +225,7 @@ export default function PptCreate({
             confirmText={state.step === numWords ? 'Create ppt' : 'Next'}
             confirmClick={() => dispatch({ type: 'Step_Increase' })}
             confirmDisabled={
-              state.step >= numWords + 1 || state.selectedImgs[i].img === null
+              state.step >= numWords + 1 || state.selectedImgs[i].img === ''
             }
             hideActions={state.step >= numWords + 1}
           ></Modal.Actions>

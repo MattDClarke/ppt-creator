@@ -1,11 +1,10 @@
-/**
- * Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
- *
- * text - The text to be rendered.
- * font - The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
- *
- * from http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
- */
+/*
+  Uses canvas.measureText to compute and return the width of the given text of given font in pixels.
+  text - The text to be rendered.
+  font - The css font descriptor that text is to be rendered with (e.g. "bold 14px verdana").
+  
+  from http://stackoverflow.com/questions/118241/calculate-text-width-with-javascript/21015393#21015393
+*/
 
 function getTextWidth(text: string, font: string) {
   const canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -19,16 +18,14 @@ function getTextWidth(text: string, font: string) {
 
 // binary search to find font size required to fit a provided width
 
-/**
- * Find the largest font size (in pixels) that allows the string to fit in the given width.
- *
- * text - The text to be rendered.
- * font - The css font descriptor that text is to be rendered with (e.g. "bold ?px verdana") -- note the use of ? in place of the font size.
- * width - The width in pixels the string must fit in
- * minFontPx - The smallest acceptable font size in pixels
- * maxFontPx - The largest acceptable font size in pixels
- *
- * */
+/*
+  Find the largest font size (in pixels) that allows the string to fit in the given width.
+  text - The text to be rendered.
+  font - The css font descriptor that text is to be rendered with (e.g. "bold ?px verdana") -- note the use of ? in place of the font size.
+  width - The width in pixels the string must fit in
+  minFontPx - The smallest acceptable font size in pixels
+  maxFontPx - The largest acceptable font size in pixels
+*/
 
 export function getTextSizeForWidth(
   text: string,

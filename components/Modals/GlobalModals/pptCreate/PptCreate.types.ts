@@ -3,11 +3,16 @@ import { Color } from 'react-color-palette';
 export type selectedImg = {
   step: number;
   word: string;
-  img: string | null;
-  translation: string | null;
-  originalImgWidth: number | null;
-  originalImgHeight: number | null;
-  triggerDownloadAPI: string | null;
+  img: string;
+  translation: string;
+  originalImgWidth: number;
+  originalImgHeight: number;
+  triggerDownloadAPI: string;
+};
+
+type layoutOption = {
+  type: string;
+  label: string;
 };
 
 export type pptOptions = {
@@ -16,6 +21,7 @@ export type pptOptions = {
   italic: boolean;
   color: Color;
   backgroundColor: Color;
+  layoutTypes?: layoutOption[];
 };
 
 export type State = {
